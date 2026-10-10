@@ -15,3 +15,15 @@ Planned feature include:
  - comparing velocities before and after collisions.
  - investigating the conservation of momentum.
  -exploring elastic and inelastic collisions.
+
+Technology
+ - python 
+ - py game 
+ - NumPy
+ - Matplotlib
+ - pytest
+
+Project status
+Physlab is currently in early development. The initial focus is on building the foundation for the foundation for the one dimensional collision simulation.
+
+More physics modules may be added as the project develops.
