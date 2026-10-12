@@ -10,8 +10,8 @@ import pygame_gui
 pygame.init()
 
 # screen sizes - kept it a bit wide for the gui stuff on the right
-WIDTH = 1000
-HEIGHT = 500
+WIDTH = 1100
+HEIGHT = 700
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("PhysLab | Collision Simulator")
@@ -51,9 +51,9 @@ small_font = pygame.font.Font(None, 23)
 
 # UI elements setup 
 # Man, positioning these by hand is always such a pain...
-title_label = pygame_gui.elements.UILabel(
-    relative_rect=pygame.Rect(660, 20, 300, 35),
-    text="PhysLab Controls",
+title_label=pygame_gui.elements.UILabel(
+    relative_rect=pygame.Rect(30,15,500,40),
+    text="PHYSLAB|Collision simulator|",
     manager=manager
 )
 
@@ -217,8 +217,26 @@ while running:
     elif distance > (BALL_RADIUS * 2):
         colliding = False
 
-    # Drawing stuff
+    # Background
     screen.fill(BACKGROUND)
+    pygame.draw.rect(
+        screen,
+        (35,45,62),
+        pygame.Rect(20,75,700,390),
+        border_radius=12
+    )
+    pygame.draw.rect(
+        screen,
+        (45,58,78),
+        pygame.Rect(740,75,340,390),
+        border_radius=12
+    )
+    pygame.draw.rect(
+        screen,
+        (35,45,62),
+        pygame.Rect(20,485,1060,190),
+        border_radius=12
+    )
 
     # draw track line
     pygame.draw.line(screen, (65, 70, 90), (20, ball_y), (620, ball_y), 2)
