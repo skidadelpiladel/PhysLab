@@ -1,0 +1,377 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhysLab | Explore Physics</title>
+<style>
+:root {
+  --bg: #0a0d14;
+  --panel: #111722;
+  --border: #252e40;
+  --text: #edf3ff;
+  --muted: #94a3b8;
+  --blue: #56b4ff;
+  --orange: #ffad72;
+  --green: #65e6b0;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.6 system-ui, sans-serif;
+}
+nav {
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 7%;
+  border-bottom: 1px solid var(--border);
+}
+.logo { font-size: 22px; font-weight: 800; letter-spacing: -1px; }
+.logo span { color: var(--blue); }
+nav a, .button {
+  color: var(--text);
+  text-decoration: none;
+}
+nav a { color: var(--muted); }
+main { max-width: 1100px; margin: auto; padding: 65px 24px; }
+.tag {
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 12px;
+  font-weight: 700;
+}
+h1 {
+  font-size: clamp(42px, 7vw, 76px);
+  line-height: 1.05;
+  letter-spacing: -3px;
+  margin: 18px 0;
+}
+h1 span { color: var(--blue); }
+p { color: var(--muted); }
+.hero { max-width: 720px; margin-bottom: 42px; }
+.hero p { font-size: 17px; max-width: 590px; }
+.button {
+  display: inline-block;
+  background: var(--blue);
+  color: #07111c;
+  border: 0;
+  padding: 12px 20px;
+  border-radius: 9px;
+  font-weight: 750;
+  cursor: pointer;
+}
+.section-title { margin: 48px 0 20px; }
+.section-title h2 { margin-bottom: 0; font-size: 28px; }
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  min-width: 0;
+}
+.card h3 { margin-top: 0; }
+.visual {
+  background: #080c13;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 22px;
+  overflow: hidden;
+}
+canvas { width: 100%; display: block; }
+.control { margin: 22px 0; }
+.control-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+output { color: var(--blue); font-variant-numeric: tabular-nums; }
+input[type="range"] { width: 100%; accent-color: var(--blue); cursor: pointer; }
+.results {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 20px;
+}
+.metric {
+  background: #0a101b;
+  border: 1px solid var(--border);
+  padding: 14px;
+  border-radius: 10px;
+  overflow-wrap: anywhere;
+}
+.metric small { color: var(--muted); display: block; }
+.metric strong { font-size: 19px; }
+.blue { color: var(--blue); }
+.orange { color: var(--orange); }
+.status { margin-top: 15px; color: var(--green); font-size: 13px; }
+.formula {
+  font-family: ui-monospace, monospace;
+  color: var(--blue);
+  background: #0a101b;
+  border-radius: 8px;
+  padding: 12px;
+  overflow-wrap: anywhere;
+}
+footer {
+  border-top: 1px solid var(--border);
+  padding: 28px 7%;
+  color: var(--muted);
+  text-align: center;
+}
+@media (max-width: 700px) {
+  main { padding-top: 42px; }
+  .grid { grid-template-columns: 1fr; }
+  h1 { letter-spacing: -2px; }
+  nav { padding: 0 5%; }
+}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">Phys<span>Lab</span></div>
+  <a href="#lab">Collision Lab ↗</a>
+</nav>
+
+<main>
+  <section class="hero">
+    <div class="tag">Interactive physics laboratory</div>
+    <h1>Understand physics.<br><span>Experiment with it.</span></h1>
+    <p>
+      PhysLab is an educational physics project that turns equations
+      into experiments. Change the variables, observe the results,
+      and discover the science behind motion.
+    </p>
+    <a class="button" href="#lab">Open Collision Lab ↓</a>
+  </section>
+
+  <section class="section-title">
+    <div class="tag">Experiment 001</div>
+    <h2>One-dimensional collisions</h2>
+    <p>Explore how mass and velocity affect an elastic collision.</p>
+  </section>
+
+  <section id="lab" class="grid">
+    <div class="card">
+      <h3>Collision preview</h3>
+      <div class="visual">
+        <canvas id="scene" width="500" height="230"></canvas>
+      </div>
+      <div class="formula">p = mv</div>
+      <p>
+        Momentum is mass multiplied by velocity.
+        Positive and negative values indicate direction.
+      </p>
+      <div class="results">
+        <div class="metric">
+          <small>Blue final velocity</small>
+          <strong id="v1out" class="blue">−1.67</strong>
+          <small>simulation units</small>
+        </div>
+        <div class="metric">
+          <small>Orange final velocity</small>
+          <strong id="v2out" class="orange">0.33</strong>
+          <small>simulation units</small>
+        </div>
+      </div>
+      <button class="button" id="reset" style="margin-top:20px">
+        Reset values
+      </button>
+    </div>
+
+    <div class="card">
+      <h3>Experiment controls</h3>
+      <p>Adjust the starting conditions.</p>
+
+      <div class="control">
+        <div class="control-head">
+          <label for="m1">Blue mass</label>
+          <output id="m1val">1.0 kg</output>
+        </div>
+        <input id="m1" type="range" min="0.5" max="5" step="0.5" value="1">
+      </div>
+
+      <div class="control">
+        <div class="control-head">
+          <label for="m2">Orange mass</label>
+          <output id="m2val">2.0 kg</output>
+        </div>
+        <input id="m2" type="range" min="0.5" max="5" step="0.5" value="2">
+      </div>
+
+      <div class="control">
+        <div class="control-head">
+          <label for="v1">Blue initial velocity</label>
+          <output id="v1val">1.0</output>
+        </div>
+        <input id="v1" type="range" min="-5" max="5" step="0.5" value="1">
+      </div>
+
+      <div class="control">
+        <div class="control-head">
+          <label for="v2">Orange initial velocity</label>
+          <output id="v2val">−1.0</output>
+        </div>
+        <input id="v2" type="range" min="-5" max="5" step="0.5" value="-1">
+      </div>
+
+      <div class="formula">
+        v₁' = ((m₁−m₂)v₁ + 2m₂v₂) / (m₁+m₂)
+      </div>
+
+      <div class="results">
+        <div class="metric">
+          <small>Momentum before</small>
+          <strong id="pb">−1.00</strong>
+        </div>
+        <div class="metric">
+          <small>Momentum after</small>
+          <strong id="pa">−1.00</strong>
+        </div>
+        <div class="metric">
+          <small>Kinetic energy before</small>
+          <strong id="eb">1.50</strong>
+        </div>
+        <div class="metric">
+          <small>Kinetic energy after</small>
+          <strong id="ea">1.50</strong>
+        </div>
+      </div>
+      <div id="status" class="status" aria-live="polite">
+        Conservation checks passed.
+      </div>
+    </div>
+  </section>
+
+  <section class="section-title">
+    <h2>Built to explore</h2>
+    <div class="grid">
+      <div class="card">
+        <h3 class="blue">01 / Mechanics</h3>
+        <p>Investigate motion, velocity, collisions, and forces.</p>
+      </div>
+      <div class="card">
+        <h3 class="orange">02 / Experimentation</h3>
+        <p>Change initial conditions and compare calculated outcomes.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  PhysLab · An educational physics simulation project
+</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const canvas = $("scene");
+const ctx = canvas.getContext("2d");
+
+function fmt(n) {
+  return (Math.abs(n) < 0.0000001 ? 0 : n).toFixed(2);
+}
+
+function calculate() {
+  const m1 = Number($("m1").value);
+  const m2 = Number($("m2").value);
+  const v1 = Number($("v1").value);
+  const v2 = Number($("v2").value);
+  const totalMass = m1 + m2;
+
+  // Velocities after an ideal 1D elastic collision.
+  const u1 = ((m1 - m2) * v1 + 2 * m2 * v2) / totalMass;
+  const u2 = (2 * m1 * v1 + (m2 - m1) * v2) / totalMass;
+
+  const pBefore = m1 * v1 + m2 * v2;
+  const pAfter = m1 * u1 + m2 * u2;
+  const eBefore = 0.5 * m1 * v1 ** 2 + 0.5 * m2 * v2 ** 2;
+  const eAfter = 0.5 * m1 * u1 ** 2 + 0.5 * m2 * u2 ** 2;
+
+  $("m1val").textContent = m1.toFixed(1) + " kg";
+  $("m2val").textContent = m2.toFixed(1) + " kg";
+  $("v1val").textContent = v1.toFixed(1);
+  $("v2val").textContent = v2.toFixed(1);
+  $("v1out").textContent = fmt(u1);
+  $("v2out").textContent = fmt(u2);
+  $("pb").textContent = fmt(pBefore);
+  $("pa").textContent = fmt(pAfter);
+  $("eb").textContent = fmt(eBefore);
+  $("ea").textContent = fmt(eAfter);
+
+  $("status").textContent =
+    Math.abs(pBefore - pAfter) < 1e-8 &&
+    Math.abs(eBefore - eAfter) < 1e-8
+      ? "✓ Momentum and kinetic energy are conserved."
+      : "Check the collision calculations.";
+
+  draw(v1, v2, u1, u2);
+}
+
+function draw(v1, v2, u1, u2) {
+  const w = canvas.width;
+  const h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = "#080c13";
+  ctx.fillRect(0, 0, w, h);
+
+  ctx.strokeStyle = "#263246";
+  ctx.beginPath();
+  ctx.moveTo(20, 115);
+  ctx.lineTo(w - 20, 115);
+  ctx.stroke();
+
+  // Ball sizes are visual only, not a scale model of physical size.
+  const r1 = 20 + Number($("m1").value) * 2;
+  const r2 = 20 + Number($("m2").value) * 2;
+  const x1 = 145;
+  const x2 = 355;
+
+  ctx.beginPath();
+  ctx.arc(x1, 115, r1, 0, Math.PI * 2);
+  ctx.fillStyle = "#56b4ff";
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(x2, 115, r2, 0, Math.PI * 2);
+  ctx.fillStyle = "#ffad72";
+  ctx.fill();
+
+  ctx.font = "14px system-ui";
+  ctx.textAlign = "center";
+  ctx.fillStyle = "#edf3ff";
+  ctx.fillText("BLUE", x1, 35);
+  ctx.fillText("ORANGE", x2, 35);
+  ctx.fillStyle = "#94a3b8";
+  ctx.fillText("Before: " + v1.toFixed(1), x1, 180);
+  ctx.fillText("After: " + u1.toFixed(1), x1, 205);
+  ctx.fillText("Before: " + v2.toFixed(1), x2, 180);
+  ctx.fillText("After: " + u2.toFixed(1), x2, 205);
+}
+
+["m1", "m2", "v1", "v2"].forEach(id => {
+  $(id).addEventListener("input", calculate);
+});
+
+$("reset").addEventListener("click", () => {
+  $("m1").value = 1;
+  $("m2").value = 2;
+  $("v1").value = 1;
+  $("v2").value = -1;
+  calculate();
+});
+
+calculate();
+</script>
+</body>
+</html>
