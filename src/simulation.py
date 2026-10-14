@@ -39,8 +39,8 @@ ball_mass = 1.0
 ball2_mass = 2.0
 
 BALL_RADIUS = 20
-LEFT_WALL = BALL_RADIUS
-RIGHT_WALL = 620 - BALL_RADIUS # arbitrary boundary where the track ends
+LEFT_WALL = 40 +BALL_RADIUS
+RIGHT_WALL = 700 - BALL_RADIUS # arbitrary boundary where the track ends
 
 colliding = False
 running = True
@@ -58,36 +58,41 @@ title_label=pygame_gui.elements.UILabel(
 )
 
 mass1_label = pygame_gui.elements.UILabel(
-    relative_rect=pygame.Rect(660, 65, 280, 30),
+    relative_rect=pygame.Rect(770, 145, 260, 30),
     text="Blue mass: 1.0 kg",
     manager=manager
 )
 
 mass1_slider = pygame_gui.elements.UIHorizontalSlider(
-    relative_rect=pygame.Rect(660, 100, 280, 25),
+    relative_rect=pygame.Rect(770, 180, 260, 25),
     start_value=ball_mass,
     value_range=(0.5, 5.0),
     manager=manager
 )
 
 mass2_label = pygame_gui.elements.UILabel(
-    relative_rect=pygame.Rect(660, 145, 280, 30),
+    relative_rect=pygame.Rect(770, 225, 260, 30),
     text="Orange mass: 2.0 kg",
     manager=manager
 )
 
 mass2_slider = pygame_gui.elements.UIHorizontalSlider(
-    relative_rect=pygame.Rect(660, 180, 280, 25),
+    relative_rect=pygame.Rect(770, 260, 260, 25),
     start_value=ball2_mass,
     value_range=(0.5, 5.0),
     manager=manager
 )
 
 reset_button = pygame_gui.elements.UIButton(
-    relative_rect=pygame.Rect(660, 230, 280, 40),
+    relative_rect=pygame.Rect(770, 320, 260, 45),
     text="Reset",
     manager=manager
 )
+controls_label=pygame_gui.elements.UILabel(
+    relative_rect=pygame.Rect(770, 90, 260,35),
+    text="SIMULATION CONTROLS",
+    manager=manager
+    )
 
 
 # physics formulas - standard 1D elastic collision stuff from high school physics lol
@@ -239,36 +244,46 @@ while running:
     )
 
     # draw track line
-    pygame.draw.line(screen, (65, 70, 90), (20, ball_y), (620, ball_y), 2)
+    pygame.draw.line(screen, (65, 80, 105), (40, ball_y), (700, ball_y), 2)
 
     # draw the balls
     pygame.draw.circle(screen, BLUE, (int(ball_x), int(ball_y)), BALL_RADIUS)
     pygame.draw.circle(screen, ORANGE, (int(ball2_x), int(ball2_y)), BALL_RADIUS)
 
     # draw text panels on the left side
-    draw_text("SIMULATION", 20, 25, MUTED)
-    draw_text(f"Blue: {ball_mass:.1f} kg | v = {ball_speed:.3f}", 20, 55, BLUE)
-    draw_text(f"Orange: {ball2_mass:.1f} kg | v = {ball2_speed:.3f}", 20, 85, ORANGE)
+    draw_text("SIMULATION", 40, 95, MUTED)
+    draw_text(f"Blue: {ball_mass:.1f} kg | v = {ball_speed:.3f}", 40, 125, BLUE)
+    draw_text(f"Orange: {ball2_mass:.1f} kg | v = {ball2_speed:.3f}", 40, 155, ORANGE)
 
     # divider line for physics checks
-    pygame.draw.line(screen, (65, 70, 90), (20, 300), (620, 300), 1)
-    
-    draw_text("PHYSICS CHECKS", 20, 315, WHITE, font)
+    draw_text("PHYSICS VALIDATION", 40, 505, WHITE, font)
 
     if has_collided:
-        draw_text(f"Momentum: {momentum_before:.4f} -> {momentum_after:.4f}", 20, 350)
-        draw_text(f"Kinetic Energy: {energy_before:.4f} -> {energy_after:.4f}", 20, 380)
+        draw_text(
+            f"Momentum: {momentum_before:.4f} -> {momentum_after:.4f}",
+            40, 550
+        )
 
-        # check if physics checks out (with a tiny tolerance for floating point math)
+        draw_text(
+            f"Kinetic Energy: {energy_before:.4f} -> {energy_after:.4f}",
+            40, 580
+        )
+
         momentum_ok = abs(momentum_before - momentum_after) < 0.0001
         energy_ok = abs(energy_before - energy_after) < 0.0001
 
         if momentum_ok and energy_ok:
-            draw_text("Momentum and kinetic energy conserved", 20, 420, (100, 230, 165))
+            draw_text(
+                "Conservation checks passed",
+                40, 615, (100, 230, 165)
+            )
         else:
-            draw_text("Conservation check failed?? Check math", 20, 420, (255, 100, 100))
+            draw_text(
+                "Conservation checks failed",
+                40, 615, (255, 100, 100)
+            )
     else:
-        draw_text("Waiting for collision...", 20, 355, MUTED)
+        draw_text("Waiting for collision...", 40, 550, MUTED)
 
     # update UI manager
     manager.update(time_delta)
