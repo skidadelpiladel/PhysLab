@@ -44,6 +44,7 @@ RIGHT_WALL = 700 - BALL_RADIUS # arbitrary boundary where the track ends
 
 colliding = False
 running = True
+paused=False
 
 # fonts - nothing fancy
 font = pygame.font.Font(None, 28)
@@ -86,6 +87,12 @@ mass2_slider = pygame_gui.elements.UIHorizontalSlider(
 reset_button = pygame_gui.elements.UIButton(
     relative_rect=pygame.Rect(770, 320, 260, 45),
     text="Reset",
+    manager=manager
+)
+
+pause_button=pygame_gui.elements.UIButton(
+    relative_rect=pygame.Rect(770,380,260,45),
+    text="Pause",
     manager=manager
 )
 controls_label=pygame_gui.elements.UILabel(
@@ -174,11 +181,18 @@ while running:
         if event.type == pygame_gui.UI_BUTTON_PRESSED:
             if event.ui_element == reset_button:
                 reset_simulation()
-
-    # update positions based on speed
-    ball_x += ball_speed
-    ball2_x += ball2_speed
-
+            elif event.ui_element==pause_button:
+                paused=not paused
+            if paused:
+                pause_button.set_text("Resume")
+            else:
+                pause_button.set_text("Pause")
+        
+    # update positions only when the simulation is not paused
+    if not paused:
+        ball_x+=ball_speed
+        ball2_x+=ball2_speed
+  
     # wall bounces for ball 1
     if ball_x >= RIGHT_WALL:
         ball_x = RIGHT_WALL
@@ -197,10 +211,16 @@ while running:
 
     # check distance between the two balls for collision
     distance = abs(ball_x - ball2_x)
-
-    if distance <= (BALL_RADIUS * 2) and not colliding:
+    #calculate the relative velocity to help know if the balls are approaching
+    relative_velocity=ball_speed-ball2_speed 
+    #Check if the balls are moving towards each other
+    approaching=(ball_x<ball2_x and relative_velocity > 0)or(ball_x > ball2_x and relative_velocity < 0)
+    if distance <= (BALL_RADIUS * 2) and not colliding and approaching:
         colliding = True
 
+    elif distance > (BALL_RADIUS * 2):
+        colliding = False
+        
         old_v1 = ball_speed
         old_v2 = ball2_speed
 
